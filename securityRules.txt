@@ -13,16 +13,20 @@ service cloud.firestore {
       allow write: if isEditor();
 			allow read;
 			
-      match /views/$(viewID) {
+      match /views/{viewID} {
         allow write: if isEditor();
       }
 			
-			match /data/$(pageID) {
+			match /data/{pageID} {
 				allow read;
 				allow write: if isEditor();
 			}
 			
-			match /forms/$(formID) {
+			match /userSpecific/{userID}/{path=**} {
+				allow read, write: if request.auth.id == userID;
+			}
+			
+			match /forms/{formID} {
 				
 				function formAllowsPublicReads() {
 					return get(/databases/$(database)/documents/projects/$(projectID)/forms/$(formID).data.allowsPublicReads);
@@ -36,7 +40,7 @@ service cloud.firestore {
 				allow read;
 				allow write: if isEditor();
 				
-				match /$(submissionID) {
+				match /{submissionID} {
 					function userIsCreator() {
 						return get(/databases/$(database)/documents/projects/$(projectID)/forms/$(formID)/$(submissionID)).data.creator == request.auth.id;
 					}
