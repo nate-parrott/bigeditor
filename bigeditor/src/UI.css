@@ -1,0 +1,19 @@
+.FullyCentered {
+	padding: 10px;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.FullyCentered > div {
+	text-align: center;
+}
+.Button {
+	color: #09d;
+	cursor: default;
+	display: inline-block;
+	padding: 0.5em 1em;
+	background-color: rgba(100,100,120,0.1);
+}

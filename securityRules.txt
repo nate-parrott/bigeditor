@@ -1,0 +1,51 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /projects/{projectID} {
+
+      function isEditor() {
+				return request.auth.id in get(/databases/$(database)/documents/projects/$(projectID)).data.editors;
+      }
+			
+			function isAuthenticated() {
+				return request.auth.id != null;
+			}
+			
+      allow write: if isEditor();
+			allow read;
+			
+      match /views/$(viewID) {
+        allow write: if isEditor();
+      }
+			
+			match /data/$(pageID) {
+				allow read;
+				allow write: if isEditor();
+			}
+			
+			match /forms/$(formID) {
+				
+				function formAllowsPublicReads() {
+					return get(/databases/$(database)/documents/projects/$(projectID)/forms/$(formID).data.allowsPublicReads);
+				}
+				function formAllowsPublicAdditions() {
+					return get(/databases/$(database)/documents/projects/$(projectID)/forms/$(formID).data.allowsPublicAdditions);
+				}
+				function formAllowsLoggedInAdditions() {
+					return get(/databases/$(database)/documents/projects/$(projectID)/forms/$(formID).data.formAllowsLoggedInAdditions);
+				}
+				allow read;
+				allow write: if isEditor();
+				
+				match /$(submissionID) {
+					function userIsCreator() {
+						return get(/databases/$(database)/documents/projects/$(projectID)/forms/$(formID)/$(submissionID)).data.creator == request.auth.id;
+					}
+				
+					allow read: if formAllowsPublicReads() || userIsCreator();
+					allow create: if formAllowsPublicAdditions() || (formAllowsLoggedInAdditions && isAuthenticated());
+					allow write: if isAuthenticated() && isUserCreator();
+				}
+			}
+    }
+  }
+}
