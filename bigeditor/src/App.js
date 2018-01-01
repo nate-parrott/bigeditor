@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, FullyCentered } from './UI';
 import { PanelManager, Panel } from './Panels';
-import './App.css';
+import { getSubdomain } from './utils';
+import './css/App.css';
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ let TestComponent = ({panelMgr}) => {
 	return (
 		<FullyCentered>
 			<h1>hey there!</h1>
+			<p>Current subdomain: <strong>{getSubdomain() || 'null'}</strong></p>
 			<Button onClick={push}>Show a panel!</Button>
 		</FullyCentered>
 	)

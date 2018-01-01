@@ -1,5 +1,5 @@
 import React from 'react';
-import './UI.css';
+import './css/UI.css';
 
 export let Button = ({onClick, children}) => {
 	return <div className='Button' onClick={onClick}>{children}</div>;

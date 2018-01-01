@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Panels.css';
+import './css/Panels.css';
 
 export class Panel {
 	constructor(renderFunc, options) {
