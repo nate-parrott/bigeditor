@@ -12,6 +12,7 @@
 	flex-grow: 1;
 	width: 20px;
 	text-align: right;
+	border-radius: 0;
 }
 .LandingPage .domainField label {
 	padding: 10px;

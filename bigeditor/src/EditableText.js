@@ -3,7 +3,7 @@ import sanitizeHtml from 'sanitize-html';
 
 export default class EditableText extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
-		return nextProps.html !== this.presentedHTML;
+		return nextProps.html !== this.presentedHTML || nextProps.editable !== this.props.editable;
 	}
 	render() {
 		let html = this.props.html;
@@ -12,7 +12,7 @@ export default class EditableText extends Component {
 		}
 		this.presentedHTML = html;
 		return (
-			<div className='EditableText' contentEditable dangerouslySetInnerHTML={{__html: html}} onInput={this.change.bind(this)} ref={(d) => this.div = d} />
+			<div className='EditableText' contentEditable={this.props.editable} dangerouslySetInnerHTML={{__html: html}} onInput={this.change.bind(this)} ref={(d) => this.div = d} />
 		);
 	}
 	change(e) {

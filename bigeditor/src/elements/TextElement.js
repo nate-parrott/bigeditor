@@ -9,7 +9,7 @@ let TextElement = ({editable, configurable, view, data, onChangeView, onChangeDa
 	}
 	return (
 		<div className='TextElement'>
-			<EditableText sanitized html={data.untrustedHTML} onChange={updateHTML} />
+			<EditableText sanitized editable={editable} html={data.untrustedHTML} onChange={updateHTML} />
 		</div>
 	)
 }
