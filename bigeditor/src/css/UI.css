@@ -17,4 +17,18 @@
 	padding: 0.5em 1em;
 	background-color: rgba(100,100,120,0.1);
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	font-size: 1em;
+	font-family: inherit;
+	border: none;
+	border-radius: 0;
+	appearance: none;
+	outline: none;
+}
+.TextField {
+	font-family: inherit;
+	background-color: rgba(100,100,120,0.1);
+	font-size: inherit;
+	padding: 4px 8px;
+	outline: none;
+	border: none;
 }

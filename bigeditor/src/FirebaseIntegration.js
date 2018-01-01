@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 import { Button, Loader } from './UI.js';
 
 // https://console.firebase.google.com/u/0/project/bigeditor-532e2/authentication/providers
 
+let initResult = null;
 export let initFirebase = () => {
-  let config = {
-    apiKey: "AIzaSyBQWWraPlsm-5n6KiJW--5QoIvvEWUeU7A",
-    authDomain: "bigeditor-532e2.firebaseapp.com",
-    databaseURL: "https://bigeditor-532e2.firebaseio.com",
-    projectId: "bigeditor-532e2",
-    storageBucket: "bigeditor-532e2.appspot.com",
-    messagingSenderId: "719750287594"
-  };
-  firebase.initializeApp(config);
+	if (!initResult) {
+	  let config = {
+	    apiKey: "AIzaSyBQWWraPlsm-5n6KiJW--5QoIvvEWUeU7A",
+	    authDomain: "bigeditor-532e2.firebaseapp.com",
+	    databaseURL: "https://bigeditor-532e2.firebaseio.com",
+	    projectId: "bigeditor-532e2",
+	    storageBucket: "bigeditor-532e2.appspot.com",
+	    messagingSenderId: "719750287594"
+	  };
+	  firebase.initializeApp(config);
+		initResult = {firestore: firebase.firestore()};
+	}
+	return initResult;
 }
 
 export class UserObserver extends Component {
@@ -58,7 +64,7 @@ export class LoginButton extends Component {
 	}
 	login() {
 		this.setState({loading: true});
-		firebase.auth().signInWithRedirect(provider).then(() => {
+		firebase.auth().signInWithPopup(provider).then(() => {
 			this.setState({loading: false});
 		}).catch(() => {
 			this.setState({loading: false});
@@ -72,3 +78,4 @@ export let LogoutButton = () => {
 	}
 	return <Button onClick={logout}>Log out</Button>;
 }
+
