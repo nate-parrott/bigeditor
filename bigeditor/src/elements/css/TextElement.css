@@ -4,6 +4,7 @@
 }
 .TextElement > .EditableText {
 	outline: none;
+	padding: 0 10px;
 }
 .TextElement:first-child {
 	margin-top: 3em;
