@@ -1,0 +1,10 @@
+.TextElement {
+	max-width: 800px;
+	margin: auto;
+}
+.TextElement > .EditableText {
+	outline: none;
+}
+.TextElement:first-child {
+	margin-top: 3em;
+}

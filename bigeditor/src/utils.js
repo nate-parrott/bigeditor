@@ -7,3 +7,9 @@ export let getSubdomain = () => {
 		return hostParts[0];
 	}
 }
+
+export let kvPair = (key, val) => {
+	let d = {};
+	d[key] = val;
+	return d;
+}
