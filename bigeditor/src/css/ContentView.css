@@ -1,0 +1,15 @@
+.ContentView {
+	
+}
+.ContentView.isPageRoot {
+	
+}
+.ContentView > .elements {
+	padding: 0;
+	margin: 0;
+}
+.ConfigChrome {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+}

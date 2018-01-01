@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import { Button, Loader } from './UI.js';
+import { Button, Loader } from './UI';
+import { getSubdomain } from './utils';
 
 // https://console.firebase.google.com/u/0/project/bigeditor-532e2/authentication/providers
 
@@ -20,6 +21,10 @@ export let initFirebase = () => {
 		initResult = {firestore: firebase.firestore()};
 	}
 	return initResult;
+}
+
+export function projectRoot() {
+	return initFirebase().firestore.collection('projects').doc(getSubdomain());
 }
 
 export class UserObserver extends Component {

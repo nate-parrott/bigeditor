@@ -33,6 +33,8 @@ export default class UserStatusObserver extends Component {
 		if (this.state.userLoaded && this.state.siteEditorsLoaded) {
 			let {user, siteEditors} = this.state;
 			return this.props.render({user, siteEditors});
+		} else if (this.props.renderBeforeReady) {
+			return this.props.render({});
 		} else {
 			return null;
 		}

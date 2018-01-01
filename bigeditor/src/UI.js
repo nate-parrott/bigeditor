@@ -21,3 +21,7 @@ export let TextField = ({ value, onChange, disableAutoCorrect, placeholder }) =>
 	if (disableAutoCorrect) extraProps = {...extraProps, autoCorrect: 'off', autoComplete: 'off', autoCapitalize: 'off', spellCheck: 'false'};
 	return <input className='TextField' type='text' {...extraProps} value={value} onChange={(e) => onChange(e.target.value)} />
 }
+
+export let FloatingButton = ({ onClick, children }) => {
+	return <div className='FloatingButton' onClick={onClick}><div>{children}</div></div>;
+}

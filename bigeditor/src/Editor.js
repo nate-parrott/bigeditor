@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { FullyCentered } from './UI';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import ClaimSiteView from './ClaimSiteView';
 import { LogoutButton } from './FirebaseIntegration';
+import PageView from './PageView';
 
 export default class Editor extends Component {
 	render() {
@@ -16,8 +16,4 @@ export default class Editor extends Component {
 			</BrowserRouter>
 		)
 	}
-}
-
-let PageView = () => {
-	return <FullyCentered><h1>hi</h1></FullyCentered>;
 }
