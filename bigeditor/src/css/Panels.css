@@ -8,19 +8,20 @@
 }
 .PanelUIDimmer {
 	position: fixed;
-	background-color: rgba(0,0,0,0.1);
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
+.PanelUIDimmer.dimmed {
+	background-color: rgba(0,0,0,0.1);
+}
 .PanelSheet {
 	position: fixed;
 	background-color: #fffefe;
 	left: 0;
 	width: 100%;
-	padding: 10px;
 	box-sizing: border-box;
 	box-shadow: 0px 0px 8px rgba(0,0,10,0.1);
 	border: 1px solid transparent;
@@ -28,6 +29,9 @@
 	-webkit-overflow-scrolling: touch;
 	max-height: 80vh;
 	text-align: center;
+}
+.PanelSheet.padding {
+	padding: 10px;
 }
 .PanelSheet.position-bottom {
 	bottom: 0;

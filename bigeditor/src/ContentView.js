@@ -2,8 +2,10 @@ import React from 'react';
 import FirebaseLoader from './FirebaseLoader';
 import ContentModel from './ContentModel';
 import { FloatingButton } from './UI';
+import { Panel } from './Panels';
 import Element from './elements/Element';
 import { kvPair } from './utils';
+import AddSheet from './elements/AddSheet';
 import './css/ContentView.css';
 
 let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRoot }) => {
@@ -49,7 +51,10 @@ export default ContentView;
 
 let ConfigChrome = ({ panelMgr, contentModel }) => {
 	let add = () => {
-		contentModel.appendElement({type: 'text'}, {untrustedHTML: '<p>hello, world!</p>'}, 'Text');
+		panelMgr.push(new Panel(() => {
+			return <AddSheet />;
+		}, {dimsUI: false, noPadding: true}));
+		// contentModel.appendElement({type: 'text'}, {untrustedHTML: '<p>hello, world!</p>'}, 'Text');
 	};
 	return (
 		<div className='ConfigChrome'>
