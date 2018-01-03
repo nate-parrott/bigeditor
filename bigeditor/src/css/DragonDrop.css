@@ -1,0 +1,52 @@
+.DDTest .Draggable {
+  padding: 10px 20px;
+  background-color: #37f;
+  color: white;
+  text-align: center;
+  font-size: x-large;
+  font-weight: bold;
+  margin: 20px auto;
+  max-width: 600px;
+  border-radius: 7px;
+  box-shadow: inset 0px -3px 0px rgba(0,0,0,0.1);
+	cursor: move;
+}
+
+.DDTest .group {
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid gray;
+}
+
+.DDDragProxy {
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	left: 0;
+	top: 0;
+	transform-origin: top left;
+	transform: rotate(-135deg);
+	background-color: #f0f0f8;
+	border: 3px solid #fefeff;
+	box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.2);
+	border-radius: 5% 50% 50% 50%;
+	pointer-events: none;
+}
+
+.DDTarget.horizontal {
+	margin: -1px 10%;
+	border-top: 2px solid transparent;
+}
+
+.DDTarget.horizontal.active {
+	border-top: 2px solid #37f;
+}
+
+.DDTarget.vertical {
+	border-left: 2px solid transparent;
+	margin: 10% -1px;
+}
+
+.DDTarget.vertical.active {
+	border-left: 2px solid #37f;
+}

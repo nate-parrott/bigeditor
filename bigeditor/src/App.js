@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { getSubdomain } from './utils';
 import Editor from './Editor';
 import LandingPage from './LandingPage';
+import { DDTest } from './DragonDrop';
 import './css/App.css';
 
 class App extends Component {
   render() {
-    return <div className="App">{this.renderInner()}</div>
+		return <DDTest />;
+    // return <div className="App">{this.renderInner()}</div>
   }
 	renderInner() {
 		if (getSubdomain() === null) {
