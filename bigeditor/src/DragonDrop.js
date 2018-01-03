@@ -2,6 +2,30 @@ import React, { Component } from 'react';
 import { distance, distanceFromLineSegment } from './geometry';
 import './css/DragonDrop.css';
 
+/*
+🐉 DRAGON DROP 🐉
+A fun library for dragging and dropping things.
+
+How to use Dragon Drop:
+
+1. Wrap anything draggable in a <Draggable></Draggable> component. Supply a `dropData` JSON and an `onDraggedAway` callback.
+
+2. Insert drop targets using <Droppable />. Droppables default to horizontal lines; set `vertical={true}` if necessary. Supply an `onDrop` callback.
+
+3. When a drop occurs, `onDrop()` will be called with the `Draggable`'s `dropData.` If it returns `true`, then the `Draggable`'s `onDraggedAway` will be called. These callbacks should be used to modify the app's state to reflect the drag that just occurred.
+
+// TODO:
+
+- implement DropGroups, to restrict which Draggables and Droppables can interact.
+
+- support dragging external files onto <Droppable /> targets.
+
+- support touch
+
+- if the cursor is near the edges of a scrollView, scroll it
+
+*/
+
 export class DDTest extends Component {
 	constructor(props) {
 		super(props);
@@ -17,11 +41,20 @@ export class DDTest extends Component {
 		let c = this.state.containers;
 		let groups = [];
 		for (let groupName in c) {
-			let items = c[groupName].map((word) => <Draggable key={word}>{word}</Draggable>);
-			let onDrop = (idx) => {
-				// TODO
+			let draggedAway = (data) => {
+				this.removeItemFromGroup(data, groupName);
 			}
-			groups.push(<div key={groupName} className={`group group-${groupName}`}>{insertDropTargetsBetweenItems(items, onDrop)}</div>);
+			let items = c[groupName].map((word) => <Draggable key={word} dropData={word} onDraggedAway={draggedAway}>{word}</Draggable>);
+			let onDrop = (idx, data) => {
+				if (this.state.containers[groupName].indexOf(data) > -1) {
+					this.moveItemWithinGroup(groupName, data, idx);
+					return false; // return false b/c we handled the removal as well as the insertion
+				} else {
+					this.addItemToGroup(data, groupName, idx);
+					return true; // return true b/c we need `onDraggedAway` to be called so that the item can be removed from its old parent
+				}
+			}
+			groups.push(<div key={groupName} className={`group group-${groupName}`}>{insertDroppablesBetweenItems(items, onDrop)}</div>);
 		}
 		return (
 			<div className='DDTest'>
@@ -29,9 +62,38 @@ export class DDTest extends Component {
 			</div>
 		)
 	}
+	addItemToGroup(item, groupName, index) {
+		this.setState(({containers}) => {
+			containers = {...containers};
+			let newGroup = [...containers[groupName]];
+			newGroup.splice(index, 0, item);
+			containers[groupName] = newGroup;
+			return {containers};
+		});
+	}
+	removeItemFromGroup(item, groupName) {
+		this.setState(({containers}) => {
+			containers = {...containers};
+			containers[groupName] = containers[groupName].filter((x) => x !== item);
+			return {containers};
+		});
+	}
+	moveItemWithinGroup(groupName, data, toIndex) {
+		this.setState(({containers}) => {
+			containers = {...containers};
+			let group = [...containers[groupName]];
+			let oldIdx = group.indexOf(data);
+			group.splice(oldIdx, 1);
+			if (toIndex > oldIdx) toIndex--;
+			group.splice(toIndex, 0, data);
+			containers[groupName] = group;
+			return {containers};
+		});
+	}
 }
 
 class Draggable extends Component {
+	// props: {children, dropData, onDraggedAway}
 	// LIFECYCLE:
 	constructor(props) {
 		super(props);
@@ -78,11 +140,19 @@ class Draggable extends Component {
 		this.updatePos(pos);
 		if (this.dragging) {
 			e.preventDefault();
+			if (this.hasMoved) {
+				this.setCurDropTarget(findDropTarget(pos));
+			}
 		}
 	}
 	mouseup(e) {
 		if (this.dragging && this.hasMoved) {
 			e.preventDefault();
+		}
+		if (this.curDropTarget) {
+			if (this.curDropTarget.props.onDrop(this.props.dropData)) {
+				this.props.onDraggedAway(this.props.dropData);
+			}
 		}
 		this.clearDrag();
 	}
@@ -107,7 +177,6 @@ class Draggable extends Component {
 			this.dragProxy.style.top = this.pos.y + 'px';
 			this.dragProxy.style.left = this.pos.x + 'px';
 		}
-		this.setCurDropTarget(findDropTarget(pos));
 	}
 	// DRAG STATE:
 	startDragAfterDelay(ms) {
@@ -167,15 +236,17 @@ class Draggable extends Component {
 	}
 }
 
-export let insertDropTargetsBetweenItems = (items, callback) => {
-	// callback will be called back with the INDEX of the insertion
-	let makeCallback = (idx) => { return () => callback(idx); };
-	let newItems = [<DDTarget onDrop={makeCallback(0)} key={`drop-target-0}`} />];
+export let insertDroppablesBetweenItems = (items, callback) => {
+	// callback: (idx, dropData) -> accept/reject drop
+	// if `true` is returned, the `Draggable`'s `onDraggedAway` method will be invoked.
+	// if `callback` already handles removal of the old item, return false.
+	let makeCallback = (idx) => { return (dropData) => callback(idx, dropData); };
+	let newItems = [<Droppable onDrop={makeCallback(0)} key={`drop-target-0}`} />];
 	let i = 0;
 	for (let item of items) {
 		newItems.push(item);
 		i += 1;
-		newItems.push(<DDTarget onDrop={makeCallback(i)} key={`drop-target-${i}`} />);
+		newItems.push(<Droppable onDrop={makeCallback(i)} key={`drop-target-${i}`} />);
 	}
 	return newItems;
 }
@@ -199,7 +270,8 @@ let findDropTarget = (pos) => {
 	return results.length ? results[0].target : null;
 }
 
-class DDTarget extends Component {
+class Droppable extends Component {
+	// props: onDrop(dropData) -> true or false, depending on whether the drop is accepted or rejected
 	constructor(props) {
 		super(props);
 		this.state = {active: false};
