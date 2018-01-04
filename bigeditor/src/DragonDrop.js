@@ -241,6 +241,7 @@ export class Draggable extends Component {
 			this.lastTickTime = performance.now();
 			this.tick();
 		}
+		document.body.classList.add('dd-drag-active');
 	}
 	clearDrag() {
 		globalScrollCanceller.shouldCancel = false;
@@ -270,6 +271,7 @@ export class Draggable extends Component {
 			cancelAnimationFrame(this.tickHandle);
 			this.tickHandle = null;
 		}
+		document.body.classList.remove('dd-drag-active');
 	}
 	setCurDropTarget(target) {
 		if (target === this.curDropTarget) return;
@@ -325,12 +327,9 @@ let findDropTarget = (pos) => {
 	let MAX_DIST = 100;
 	let results = [];
 	for (let target of dropTargets) {
-		let line = target.lineSegment();
-		if (line) {
-			let dist = distanceFromLineSegment(line[0], line[1], pos);
-			if (dist <= MAX_DIST) {
-				results.push({target, dist});
-			}
+		let dist = target.distance(pos);
+		if (dist <= MAX_DIST) {
+			results.push({target, dist});
 		}
 	}
 	results.sort((a, b) => {
@@ -340,15 +339,17 @@ let findDropTarget = (pos) => {
 }
 
 export class Droppable extends Component {
-	// props: onDrop(dropData) -> true or false, depending on whether the drop is accepted or rejected
+	// props:
+	// - onDrop(dropData) -> true or false, depending on whether the drop is accepted or rejected
+	// - shape: horizontal | vertical | box (default horizontal)
 	constructor(props) {
 		super(props);
 		this.state = {active: false};
 	}
 	render() {
-		let direction = this.props.vertical ? 'vertical' : 'horizontal';
-		let className = `Droppable ${direction} ${this.state.active ? 'active' : ''}`;
-		return <div className={className} onDrop={this.props.onDrop} ref={(n) => this.node = n} />
+		let shape = this.props.shape || 'horizontal';
+		let className = `Droppable ${shape} ${this.state.active ? 'active' : ''}`;
+		return <div className={className} onDrop={this.props.onDrop} ref={(n) => this.node = n}>{this.props.children}</div>;
 	}
 	componentDidMount() {
 		dropTargets.push(this);
@@ -358,7 +359,24 @@ export class Droppable extends Component {
 		let idx = dropTargets.indexOf(this);
 		if (idx > -1) dropTargets.splice(idx, 1);
 	}
+	distance(point) {
+		let shape = this.props.shape || 'horizontal';
+		if (shape === 'horizontal' || shape === 'vertical') {
+			let line = this.lineSegment();
+			if (line) {
+				return distanceFromLineSegment(line[0], line[1], point);
+			}
+		} else if (this.props.shape === 'box') {
+			let bbox = this.node.getBoundingClientRect();
+			let {x,y} = point;
+			if (x >= bbox.x && y >= bbox.y && x <= bbox.x + bbox.width && y <= bbox.y + bbox.height) {
+				return 0;
+			}
+		}
+		return 99999;
+	}
 	lineSegment() {
+		// for shape = horizontal | vertical
 		if (this.node) {
 			let bounds = this.node.getBoundingClientRect();
 			if (this.props.vertical) {

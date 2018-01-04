@@ -6,7 +6,7 @@ import { ModalPanel } from './Panels';
 import Element from './elements/Element';
 import { kvPair } from './utils';
 import AddSheet from './elements/AddSheet';
-import { insertDroppablesBetweenItems, Draggable } from './DragonDrop';
+import { insertDroppablesBetweenItems, Draggable, Droppable } from './DragonDrop';
 import './css/ContentView.css';
 
 let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, isPageRoot }) => {
@@ -92,9 +92,12 @@ class ConfigChrome extends Component {
 		this.state = {showAdd: false};
 	}
 	render() {
+		let trash = <Droppable shape='box' onDrop={() => true}><FloatingButton><i className='fa fa-trash' /></FloatingButton></Droppable>;
+		let add = <FloatingButton onClick={() => this.setState({showAdd: true})}><span>+</span></FloatingButton>;
 		return (
 			<div className='ConfigChrome'>
-				<FloatingButton onClick={() => this.setState({showAdd: true})}>+</FloatingButton>
+				{trash}
+				{add}
 				{this.state.showAdd ? <ModalPanel padding={false} onDismiss={() => this.setState({showAdd: false})}><AddSheet /></ModalPanel> : null}
 			</div>
 		);

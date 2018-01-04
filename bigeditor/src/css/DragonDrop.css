@@ -52,6 +52,10 @@
 	margin: 10% -1px;
 }
 
-.DDTarget.vertical.active {
+.Droppable.vertical.active {
 	border-left: 2px solid #37f;
+}
+
+.Droppable.box.active {
+	outline: 2px solid #37f;
 }
