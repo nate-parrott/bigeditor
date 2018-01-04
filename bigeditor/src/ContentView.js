@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import FirebaseLoader from './FirebaseLoader';
 import ContentModel from './ContentModel';
 import { FloatingButton } from './UI';
-import { Panel } from './Panels';
+import { ModalPanel } from './Panels';
 import Element from './elements/Element';
 import { kvPair } from './utils';
 import AddSheet from './elements/AddSheet';
 import { insertDroppablesBetweenItems, Draggable } from './DragonDrop';
 import './css/ContentView.css';
 
-let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRoot }) => {
+let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, isPageRoot }) => {
 	return <FirebaseLoader dbRefs={{view: viewRef, data: dataRef}} render={({view, data}) => {
 		if (view === undefined || data === undefined) return null;
 		let contentModel = new ContentModel(viewRef, dataRef, view.exists ? view.data() : null, data.exists ? data.data() : null);
@@ -17,8 +17,8 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRo
 		if (isPageRoot) classNames.push('isPageRoot');
 		return (
 			<div className={classNames.join(' ')}>
-				<ElementList contentModel={contentModel} elementListName='root' canEdit={canEdit} canConfigure={canConfigure} panelMgr={panelMgr} />
-				{ (isPageRoot && canConfigure) ? <ConfigChrome contentModel={contentModel} panelMgr={panelMgr} /> : null }
+				<ElementList contentModel={contentModel} elementListName='root' canEdit={canEdit} canConfigure={canConfigure} />
+				{ (isPageRoot && canConfigure) ? <ConfigChrome contentModel={contentModel} /> : null }
 			</div>
 		)
 	}} />;
@@ -44,7 +44,7 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panel
 			contentModel.updateElementView(elementId, newView);
 		};
 		
-		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} panelMgr={panelMgr} />;
+		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
 		if (canConfigure) {
 			let dropData = {type: 'move', elementId: elementId, view: elementView, data: data};
 			let draggedAway = () => {
@@ -86,16 +86,17 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panel
 	return <ul className='ElementList'>{elements}</ul>;
 }
 
-let ConfigChrome = ({ panelMgr, contentModel }) => {
-	let add = () => {
-		panelMgr.push(new Panel(() => {
-			return <AddSheet />;
-		}, {dimsUI: false, noPadding: true}));
-		// contentModel.appendElement({type: 'text'}, {untrustedHTML: '<p>hello, world!</p>'}, 'Text');
-	};
-	return (
-		<div className='ConfigChrome'>
-			<FloatingButton onClick={add}>+</FloatingButton>
-		</div>
-	);
+class ConfigChrome extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {showAdd: false};
+	}
+	render() {
+		return (
+			<div className='ConfigChrome'>
+				<FloatingButton onClick={() => this.setState({showAdd: true})}>+</FloatingButton>
+				{this.state.showAdd ? <ModalPanel padding={false} onDismiss={() => this.setState({showAdd: false})}><AddSheet /></ModalPanel> : null}
+			</div>
+		);
+	}
 }
