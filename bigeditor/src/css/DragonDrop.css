@@ -12,6 +12,11 @@
 	cursor: move;
 }
 
+.Draggable {
+	-webkit-user-select: none;
+	user-select: none;
+}
+
 .DDTest .group {
 	margin: 10px;
 	padding: 10px;
@@ -33,16 +38,16 @@
 	pointer-events: none;
 }
 
-.DDTarget.horizontal {
+.Droppable.horizontal {
 	margin: -1px 10%;
 	border-top: 2px solid transparent;
 }
 
-.DDTarget.horizontal.active {
+.Droppable.horizontal.active {
 	border-top: 2px solid #37f;
 }
 
-.DDTarget.vertical {
+.Droppable.vertical {
 	border-left: 2px solid transparent;
 	margin: 10% -1px;
 }

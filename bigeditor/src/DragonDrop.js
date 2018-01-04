@@ -32,7 +32,7 @@ export class DDTest extends Component {
 		this.state = {
 			containers: {
 				colors: ['red', 'blue'],
-				fruits: ['plum', 'pear', 'strawberry'],
+				fruits: ['plum', 'pear', 'strawberry', 'starfruit', 'peach', 'banana'],
 				animals: ['duck', 'turtle']
 			}
 		}
@@ -92,6 +92,19 @@ export class DDTest extends Component {
 	}
 }
 
+class GlobalScrollCanceller {
+	constructor(props) {
+		this.shouldCancel = false;
+		document.body.addEventListener('touchmove', (e) => {
+			if (this.shouldCancel) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+		}, {passive: false});
+	}
+}
+let globalScrollCanceller = new GlobalScrollCanceller();
+
 class Draggable extends Component {
 	// props: {children, dropData, onDraggedAway}
 	// LIFECYCLE:
@@ -123,7 +136,7 @@ class Draggable extends Component {
 		if (!el._hasEventListeners) {
 			el._hasEventListeners = true;
 			el.addEventListener('mousedown', this.mousedown.bind(this), {passive: false});
-			el.addEventListener('touchstart', this.touchstart.bind(this), {passive: false});
+			el.addEventListener('touchstart', this.touchstart.bind(this), {passive: false});			
 		}
 	}
 	// EVENT HANDLERS:
@@ -161,6 +174,7 @@ class Draggable extends Component {
 		this.updatePos(pos);
 		if (this.dragging) {
 			e.preventDefault();
+			e.stopPropagation();
 			if (this.hasMoved) {
 				this.setCurDropTarget(findDropTarget(pos));
 			}
@@ -183,8 +197,8 @@ class Draggable extends Component {
 		if (this.globalTrackingEnabled !== enabled) {
 			this.globalTrackingEnabled = enabled;
 			if (enabled) {
-				document.body.addEventListener('mousemove', this.mousemoveBound);
-				document.body.addEventListener('touchmove', this.touchmoveBound);
+				document.body.addEventListener('mousemove', this.mousemoveBound, {passive: false});
+				document.body.addEventListener('touchmove', this.touchmoveBound, {passive: false});
 				document.body.addEventListener('mouseup', this.mouseupBound);
 				document.body.addEventListener('touchend', this.touchendBound);
 			} else {
@@ -220,6 +234,8 @@ class Draggable extends Component {
 		this.dragProxy = document.createElement('div');
 		this.dragProxy.setAttribute('class', 'DDDragProxy');
 		window.document.body.appendChild(this.dragProxy);
+		// stop scrolling:
+		globalScrollCanceller.shouldCancel = true;
 		// add mousemove events:
 		if (this.el) {
 			this.el.addEventListener('mousemove', this.mousemoveBound, {passive: false});
@@ -231,6 +247,7 @@ class Draggable extends Component {
 		}
 	}
 	clearDrag() {
+		globalScrollCanceller.shouldCancel = false;
 		this.enableGlobalTracking(false);
 		this.hasMoved = false;
 		this.setState({dragging: false});
@@ -249,6 +266,7 @@ class Draggable extends Component {
 		if (this.el && this.el.hasMousemoveHandler) {
 			this.el.removeEventListener('mousemove', this.mousemoveBound);
 			this.el.hasMousemoveHandler = false;
+			
 		}
 		this.setCurDropTarget(null);
 		// cancel drag ticker:
@@ -333,7 +351,7 @@ class Droppable extends Component {
 	}
 	render() {
 		let direction = this.props.vertical ? 'vertical' : 'horizontal';
-		let className = `DDTarget ${direction} ${this.state.active ? 'active' : ''}`;
+		let className = `Droppable ${direction} ${this.state.active ? 'active' : ''}`;
 		return <div className={className} onDrop={this.props.onDrop} ref={(n) => this.node = n} />
 	}
 	componentDidMount() {
