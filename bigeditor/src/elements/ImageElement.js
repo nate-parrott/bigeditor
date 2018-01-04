@@ -1,29 +1,43 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { PropertyEditor, PropertyEditorGroup, PropertyEditorItemMargin, UploadImageButton } from '../PropertyEditor';
 import { Checkbox } from '../UI';
-import { Panel } from '../Panels';
+import { ModalPanel } from '../Panels';
 import './css/ImageElement.css';
 console.log(React.version);
 
-let ImageElement = ({editable, configurable, view, data, onChangeView, onChangeData, panelMgr}) => {
-	let style = {paddingBottom: 100 / data.aspectRatio + '%'};
-	let className = `ImageElement mode-${view.mode}`;
-	let img = null;
-	if (data.url) {
-		img = <img src={data.url} alt="" />;
+export class ImageElement extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {editing: false};
 	}
-	let edit = () => {
-		if (editable) {
-			panelMgr.push(new Panel(() => {
-				return <ImageElementPropertyEditor data={data} view={view} onChangeData={onChangeData} onChangeView={onChangeView} configurable={configurable} />;
-			}, {dimsUI: true, noPadding: true}));
+	render() {
+		let {editable, configurable, view, data, onChangeView, onChangeData } = this.props;
+		let style = {paddingBottom: 100 / data.aspectRatio + '%'};
+		let className = `ImageElement mode-${view.mode}`;
+		let img = null;
+		if (data.url) {
+			img = <img src={data.url} alt="" />;
 		}
+		
+		let edit = () => {
+			if (editable) {
+				this.setState({editing: true});
+			}
+		}
+		
+		let editor = null;
+		if (this.state.editing) {
+			editor = <ImageElementPropertyEditor data={data} view={view} onChangeData={onChangeData} onChangeView={onChangeView} configurable={configurable} />;
+			editor = <ModalPanel key='editor' padding={false} onDismiss={() => this.setState({editing: false})} dimsUI>{editor}</ModalPanel>;
+		}
+		
+		return (
+			<div className={className}>
+				<div className='imageWrapper' style={style} onClick={edit}>{img}</div>
+				{ editor }
+			</div>
+		)
 	}
-	return (
-		<div className={className} onClick={edit}>
-			<div className='imageWrapper' style={style}>{img}</div>
-		</div>
-	)
 }
 
 export default ImageElement;
@@ -43,7 +57,7 @@ let ImageElementPropertyEditor = ({ data, view, onChangeData, onChangeView, conf
 		}
 		groups.push(<PropertyEditorGroup title="Appearance" key="appearance">
 			<PropertyEditorItemMargin>
-				<Checkbox value={data.mode === 'full-bleed'} onToggle={toggleFullBleed}>Full-bleed</Checkbox>
+				<Checkbox value={view.mode === 'full-bleed'} onToggle={toggleFullBleed}>Full-bleed</Checkbox>
 			</PropertyEditorItemMargin>
 		</PropertyEditorGroup>);
 	}

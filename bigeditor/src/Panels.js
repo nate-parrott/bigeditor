@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import './css/Panels.css';
 
 export class Panel {
@@ -49,4 +50,28 @@ let PanelUIDimmer = ({onClick, dimmed}) => {
 let PanelSheet = ({position, children, padding}) => {
 	let className = `PanelSheet position-${position} ${padding ? 'padding' : 'no-padding'}`;
 	return <div className={className}>{children}</div>;
+}
+
+let PanelPortal = ({ children }) => {
+	let child = React.Children.only(children);
+	let container = document.getElementById('PanelPortal');
+	if (!container) {
+		container = document.createElement('div');
+		container.setAttribute('id', 'PanelPortal');
+		document.body.appendChild(container);
+	}
+	return ReactDOM.createPortal(child, container);
+}
+
+export let ModalPanel = ({ children, position, padding, dimsUI, onDismiss }) => {
+	dimsUI = (dimsUI !== false);
+	position = position || 'bottom';
+	padding = padding || true;
+	
+	let content = [];
+	if (onDismiss || dimsUI) {
+		content.push(<PanelUIDimmer key='dimmer' dimmed={dimsUI} onClick={onDismiss} />);
+	}
+	content.push(<PanelSheet key='sheet' position={position} padding={padding}>{children}</PanelSheet>);
+	return <PanelPortal><Fragment>{content}</Fragment></PanelPortal>;
 }

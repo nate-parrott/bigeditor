@@ -9,12 +9,13 @@ let elementGroups = [
 		items: [
 			{view: {type: 'text'}, data: {untrustedHTML: '<h1>hello, world!</h1>'}, label: 'Title', icon: 'font'},
 			{view: {type: 'text'}, data: {untrustedHTML: '<p>hello, world!</p>'}, label: 'Text', icon: 'font'},
-			{view: {type: 'image', mode: 'normal'}, data: {url: null, aspectRatio: 1.618}, label: 'Image', icon: 'picture-o'},			
+			{view: {type: 'image', mode: 'normal'}, data: {url: null, aspectRatio: 1.618}, label: 'Image', icon: 'picture-o'}
 		]
 	},
 	{
 		name: 'Interactivity',
 		items: [
+			{view: {type: 'placeholder'}, data: {}, label: 'Navbar', icon: 'bars'},
 			{view: {type: 'placeholder'}, data: {}, label: 'Button', icon: 'square-o'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Form', icon: 'check-square-o'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Comments', icon: 'commenting-o'},			
