@@ -105,6 +105,8 @@ class Draggable extends Component {
 		
 		this.mousemoveBound = this.mousemove.bind(this);
 		this.mouseupBound = this.mouseup.bind(this);
+		this.touchmoveBound = this.touchmove.bind(this);
+		this.touchendBound = this.touchend.bind(this);
 		
 		this.curDropTarget = null;
 	}
@@ -121,19 +123,38 @@ class Draggable extends Component {
 		if (!el._hasEventListeners) {
 			el._hasEventListeners = true;
 			el.addEventListener('mousedown', this.mousedown.bind(this), {passive: false});
-			el.addEventListener('mouseup', this.mouseup.bind(this), {passive: false});
+			el.addEventListener('touchstart', this.touchstart.bind(this), {passive: false});
 		}
 	}
 	// EVENT HANDLERS:
 	mousedown(e) {
-		this.clearDrag();
-		this.enableGlobalTracking(true);
-		this.startDragAfterDelay(200);
-		this.initialPos = {x: e.clientX, y: e.clientY};
-		this.updatePos(this.initialPos);
+		this.pointerdown({x: e.clientX, y: e.clientY}, 200);
 	}
 	mousemove(e) {
 		let pos = {x: e.clientX, y: e.clientY};
+		this.pointermove(pos, e);
+	}
+	mouseup(e) {
+		this.pointerup(e);
+	}
+	touchstart(e) {
+		this.pointerdown({x: e.touches[0].clientX, y: e.touches[0].clientY}, 500);
+	}
+	touchmove(e) {
+		let pos = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+		this.pointermove(pos, e);
+	}
+	touchend(e) {
+		this.pointerup(e);
+	}
+	pointerdown(pos, dragDelayMs) {
+		this.clearDrag();
+		this.enableGlobalTracking(true);
+		this.startDragAfterDelay(200);
+		this.initialPos = pos;
+		this.updatePos(pos);
+	}
+	pointermove(pos, e) {
 		if (distance(pos, this.initialPos) > 5) {
 			this.hasMoved = true;
 		}
@@ -145,7 +166,7 @@ class Draggable extends Component {
 			}
 		}
 	}
-	mouseup(e) {
+	pointerup(e) {
 		if (this.dragging && this.hasMoved) {
 			e.preventDefault();
 		}
@@ -163,10 +184,14 @@ class Draggable extends Component {
 			this.globalTrackingEnabled = enabled;
 			if (enabled) {
 				document.body.addEventListener('mousemove', this.mousemoveBound);
+				document.body.addEventListener('touchmove', this.touchmoveBound);
 				document.body.addEventListener('mouseup', this.mouseupBound);
+				document.body.addEventListener('touchend', this.touchendBound);
 			} else {
 				document.body.removeEventListener('mousemove', this.mousemoveBound);
+				document.body.removeEventListener('touchmove', this.touchmoveBound);
 				document.body.removeEventListener('mouseup', this.mouseupBound);
+				document.body.removeEventListener('touchend', this.touchendBound);
 			}
 		}
 	}
@@ -200,6 +225,9 @@ class Draggable extends Component {
 			this.el.addEventListener('mousemove', this.mousemoveBound, {passive: false});
 			this.el.hasMousemoveHandler = true;
 			this.updatePos(this.pos);
+			// start tracking ticks to scroll the window:
+			this.lastTickTime = performance.now();
+			this.tick();
 		}
 	}
 	clearDrag() {
@@ -223,6 +251,11 @@ class Draggable extends Component {
 			this.el.hasMousemoveHandler = false;
 		}
 		this.setCurDropTarget(null);
+		// cancel drag ticker:
+		if (this.tickHandle) {
+			cancelAnimationFrame(this.tickHandle);
+			this.tickHandle = null;
+		}
 	}
 	setCurDropTarget(target) {
 		if (target === this.curDropTarget) return;
@@ -232,6 +265,28 @@ class Draggable extends Component {
 		this.curDropTarget = target;
 		if (this.curDropTarget) {
 			this.curDropTarget.setState({active: true});
+		}
+	}
+	// Drag ticks
+	tick() {
+		let now = performance.now();
+		let dt = now - this.lastTickTime;
+		this.lastTickTime = now;
+		this.tickHandle = requestAnimationFrame(this.tick.bind(this));
+		if (dt && this.pos) {
+			let scrollThresh = Math.min(150, window.innerHeight * 0.15);
+			let scrollAmount = (distFromEdge) => {
+				return Math.max(0, 1 - distFromEdge / scrollThresh);
+			}
+			let scrollUp = scrollAmount(this.pos.y);
+			let scrollDown = scrollAmount(window.innerHeight - this.pos.y);
+			let maxScrollSpeed = 400; // 100 pixels per sec
+			let k = maxScrollSpeed * dt / 1000;
+			if (scrollUp) {
+				window.scrollBy(0, -scrollUp * k);
+			} else if (scrollDown) {
+				window.scrollBy(0, scrollDown * k);				
+			}
 		}
 	}
 }
