@@ -28,9 +28,9 @@ export default ContentView;
 
 let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => {
 	let elementsById = contentModel.view.elements;
-	let rootElementIds = contentModel.view.elementLists.root;
+	let elementIds = contentModel.view.elementLists[elementListName] || [];
 	
-	let elements = rootElementIds.map((elementId) => {
+	let elements = elementIds.map((elementId) => {
 		let elementView = elementsById[elementId];
 		let dataName = elementView.dataName;
 		let data = contentModel.data[dataName];
@@ -41,19 +41,16 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => 
 			});
 		};
 		let onChangeView = (newView) => {
-			contentModel.updateView((oldView) => {
-				let elementsById = oldView.elements || {};
-				return {...oldView, elements: {...elementsById, ...kvPair(elementId, newView)}};
-			})
+			contentModel.updateElementView(elementId, newView);
 		};
 		
 		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
-		if (canConfigure && false) {
-			// let dropData = {type: 'move', elementId: elementId, view: elementView, data: data};
-			// let draggedAway = () => {
-			// 	contentModel.removeRootElement(elementId);
-			// };
-			// return <Draggable dropData={dropData} onDraggedAway={draggedAway}>{el}</Draggable>;
+		if (canConfigure) {
+			let dropData = {type: 'move', elementId: elementId, view: elementView, data: data};
+			let draggedAway = () => {
+				contentModel.removeElementIdFromList(elementId, elementListName);
+			};
+			return <Draggable dropData={dropData} onDraggedAway={draggedAway}>{el}</Draggable>;
 		} else {
 			return el;
 		}
@@ -66,7 +63,21 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => 
 				contentModel.addElement(view, data, nameBase, 'root', index);
 				return true;
 			} else if (dropData.type === 'move') {
-				
+				let {elementId, view, data} = dropData;
+				if (elementIds.indexOf(elementId) > -1) {
+					// move this element within this list:
+					let oldIndex = elementIds.indexOf(elementId);
+					contentModel.moveElementIdWithinList(elementId, elementListName, oldIndex, index);
+					return false;
+				} else {
+					// add this element to this list:
+					contentModel.insertElementIdIntoList(elementId, elementListName, index);
+					contentModel.updateElementView(elementId, view);
+					if (!contentModel.data[view.dataName]) {
+						contentModel.updateDataByName(view.dataName, data);
+					}
+					return true;
+				}
 			}
 			return false;
 		});

@@ -81,9 +81,41 @@ export default class ContentModel {
 		this.view = fn(this.view);
 		this.viewRef.set(this.view);
 	}
-	removeRootElement(elementId) {
+	moveElementIdWithinList(elementId, elementListName, oldIndex, index) {
+		this.updateElementList(elementListName, (elementList) => {
+			elementList = elementList.slice();
+			elementList.splice(oldIndex, 1);
+			if (index > oldIndex) index--;
+			elementList.splice(index, 0, elementId);
+			return elementList;
+		});
+	}
+	insertElementIdIntoList(elementId, elementListName, index) {
+		this.updateElementList(elementListName, (elementList) => {
+			elementList = elementList.slice();
+			elementList.splice(index, 0, elementId);
+			return elementId;
+		});
+	}
+	removeElementIdFromList(elementId, elementListName) {
+		this.updateElementList(elementListName, (elementList) => {
+			return elementList.filter((id) => id !== elementId);
+		});
+	}
+	updateElementList(elementListName, func) {
 		this.updateView((oldView) => {
-			return {...oldView, rootElements: (oldView.rootElements || []).filter((id) => id !== elementId)};
+			let elementList = func(oldView.elementLists[elementListName]);
+			return {...oldView, elementLists: {...oldView.elementLists, ...kvPair(elementListName, elementList)}};
+		});
+	}
+	updateElementView(elementId, view) {
+		this.updateView((oldView) => {
+			return {...oldView, elements: {...oldView.elements, ...kvPair(elementId, view)}};
+		})
+	}
+	updateDataByName(name, value) {
+		this.updateData((oldData) => {
+			return {...oldData, ...kvPair(name, value)};
 		});
 	}
 }
