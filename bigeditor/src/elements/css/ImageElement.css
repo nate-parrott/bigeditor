@@ -5,8 +5,18 @@
 .ImageElement.mode-full-bleed {
 	width: 100%;
 }
+.ImageElement > .imageWrapper {
+	position: relative;
+}
 .ImageElement > .imageWrapper:empty {
 	box-sizing: border-box;
 	border: 4px solid #C7CACC;
 	background-image: url(/ImagePlaceholder.svg);
+}
+.ImageElement > .imageWrapper > img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { initFirebase } from './FirebaseIntegration';
 import { Button } from './UI';
+import { imageFromFile, resizeImageToBlob } from './ImageUtils';
+import { uploadAsset } from './Assets.js';
 import './css/PropertyEditor.css';
 
 export let PropertyEditor = ({children}) => {
@@ -35,7 +37,17 @@ export class UploadImageButton extends Component {
     }
 	}
 	uploadFile(file) {
-		// TODO
+		this.setState({uploading: true});
+    imageFromFile(file, (img) => {
+			let aspectRatio = img.width / img.height;
+      resizeImageToBlob(img, 2048, (fullSizeBlob) => {
+				let storage = initFirebase().storage;
+        uploadAsset(fullSizeBlob, storage).then((fullSizeURL) => {
+					this.props.onUpload({ url: fullSizeURL, aspectRatio });
+					this.setState({ uploading: false });
+				});
+			});
+		});
 	}
 }
 
