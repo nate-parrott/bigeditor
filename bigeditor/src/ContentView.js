@@ -50,7 +50,7 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => 
 			let draggedAway = () => {
 				contentModel.removeElementIdFromList(elementId, elementListName);
 			};
-			return <Draggable dropData={dropData} onDraggedAway={draggedAway}>{el}</Draggable>;
+			return <Draggable dropData={dropData} onDraggedAway={draggedAway} key={elementId}>{el}</Draggable>;
 		} else {
 			return el;
 		}

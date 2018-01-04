@@ -6,6 +6,7 @@ let elementGroups = [
 	{
 		name: 'Content',
 		items: [
+			{view: {type: 'text'}, data: {untrustedHTML: '<h1>hello, world!</h1>'}, label: 'Title', icon: 'font'},
 			{view: {type: 'text'}, data: {untrustedHTML: '<p>hello, world!</p>'}, label: 'Text', icon: 'font'},
 			{view: {type: 'placeholder'}, data: {}, label: 'Image', icon: 'picture-o'},			
 		]

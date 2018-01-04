@@ -7,10 +7,10 @@ export default class EditableText extends Component {
 	}
 	render() {
 		let html = this.props.html;
-		if (this.props.sanitized) {
-			html = sanitizeHtml(this.props.html || "");
-		}
 		this.presentedHTML = html;
+		if (this.props.sanitized) {
+			html = sanitizeHtml(this.props.html || "", sanitizationSettings);
+		}
 		return (
 			<div className='EditableText' contentEditable={this.props.editable} dangerouslySetInnerHTML={{__html: html}} onInput={this.change.bind(this)} ref={(d) => this.div = d} />
 		);
@@ -20,4 +20,8 @@ export default class EditableText extends Component {
 		this.presentedHTML = html;
 		this.props.onChange(html);
 	}
+}
+
+let sanitizationSettings = {
+	allowedTags: sanitizeHtml.defaults.allowedTags.concat(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'blockquote', 'code'])
 }
