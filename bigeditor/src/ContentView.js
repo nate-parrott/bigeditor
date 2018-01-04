@@ -17,7 +17,7 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRo
 		if (isPageRoot) classNames.push('isPageRoot');
 		return (
 			<div className={classNames.join(' ')}>
-				<ElementList contentModel={contentModel} elementListName='root' canEdit={canEdit} canConfigure={canConfigure} />
+				<ElementList contentModel={contentModel} elementListName='root' canEdit={canEdit} canConfigure={canConfigure} panelMgr={panelMgr} />
 				{ (isPageRoot && canConfigure) ? <ConfigChrome contentModel={contentModel} panelMgr={panelMgr} /> : null }
 			</div>
 		)
@@ -26,7 +26,7 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRo
 
 export default ContentView;
 
-let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => {
+let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panelMgr }) => {
 	let elementsById = contentModel.view.elements;
 	let elementIds = contentModel.view.elementLists[elementListName] || [];
 	
@@ -44,7 +44,7 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => 
 			contentModel.updateElementView(elementId, newView);
 		};
 		
-		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
+		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} panelMgr={panelMgr} />;
 		if (canConfigure) {
 			let dropData = {type: 'move', elementId: elementId, view: elementView, data: data};
 			let draggedAway = () => {

@@ -1,0 +1,32 @@
+.PropertyEditor {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	color: #2D2923;
+}
+.PropertyEditor > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+.PropertyEditorGroup {
+	text-align: left;
+}
+.PropertyEditorGroup > label {
+	font-size: small;
+	font-weight: bold;
+	text-transform: uppercase;
+	opacity: 0.5;
+	display: inline-block;
+	margin: 10px;
+	margin-bottom: 0;
+	margin-left: 0;
+}
+.PropertyEditorGroup > .children {
+	display: flex;
+	flex-direction: row;
+}
+.PropertyEditorItemMargin {
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}

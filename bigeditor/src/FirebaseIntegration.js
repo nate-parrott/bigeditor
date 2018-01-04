@@ -18,7 +18,7 @@ export let initFirebase = () => {
 	    messagingSenderId: "719750287594"
 	  };
 	  firebase.initializeApp(config);
-		initResult = {firestore: firebase.firestore()};
+		initResult = {firestore: firebase.firestore(), storage: firebase.storage()};
 	}
 	return initResult;
 }

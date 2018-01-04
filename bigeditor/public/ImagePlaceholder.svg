@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="background: #EEF1F4;">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>ImagePlaceholder</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="image-placeholder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.161967844">
+        <g id="ImagePlaceholder" fill="#000000">
+            <rect id="Rectangle" transform="translate(9.275649, 9.275649) rotate(45.000000) translate(-9.275649, -9.275649) " x="7.27564928" y="-69.7243507" width="4" height="158"></rect>
+            <rect id="Rectangle-Copy" transform="translate(-0.224351, -0.224351) rotate(45.000000) translate(0.224351, 0.224351) " x="-2.22435072" y="-79.2243507" width="4" height="158"></rect>
+            <rect id="Rectangle-Copy-2" transform="translate(18.775649, 18.775649) rotate(45.000000) translate(-18.775649, -18.775649) " x="16.7756493" y="-60.2243507" width="4" height="158"></rect>
+        </g>
+    </g>
+</svg>

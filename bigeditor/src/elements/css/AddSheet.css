@@ -1,28 +1,3 @@
-.AddSheet {
-	overflow-x: auto;
-	-webkit-overflow-scrolling: touch;
-	color: #2D2923;
-}
-.AddSheet > div {
-	display: flex;
-	flex-direction: row;
-}
-.AddSheetElementGroup {
-	text-align: left;
-}
-.AddSheetElementGroup > label {
-	font-size: small;
-	font-weight: bold;
-	text-transform: uppercase;
-	opacity: 0.5;
-	display: inline-block;
-	margin: 10px;
-	margin-bottom: 0;
-}
-.AddSheetElementGroup > .items {
-	display: flex;
-	flex-direction: row;
-}
 .AddSheetItem {
 	width: 50px;
 	text-align: center;

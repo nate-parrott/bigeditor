@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropertyEditor, PropertyEditorGroup } from '../PropertyEditor';
 import './css/AddSheet.css';
 import { Draggable } from '../DragonDrop';
 
@@ -8,7 +9,7 @@ let elementGroups = [
 		items: [
 			{view: {type: 'text'}, data: {untrustedHTML: '<h1>hello, world!</h1>'}, label: 'Title', icon: 'font'},
 			{view: {type: 'text'}, data: {untrustedHTML: '<p>hello, world!</p>'}, label: 'Text', icon: 'font'},
-			{view: {type: 'placeholder'}, data: {}, label: 'Image', icon: 'picture-o'},			
+			{view: {type: 'image', mode: 'normal'}, data: {url: null, aspectRatio: 1.618}, label: 'Image', icon: 'picture-o'},			
 		]
 	},
 	{
@@ -32,11 +33,9 @@ let elementGroups = [
 
 let AddSheet = ({ onAdd }) => {
 	return (
-		<div className='AddSheet'>
-			<div>
-				{elementGroups.map((group, i) => <AddSheetElementGroup key={i} group={group} />)}
-			</div>
-		</div>
+		<PropertyEditor>
+			{elementGroups.map((group, i) => <AddSheetElementGroup key={i} group={group} />)}
+		</PropertyEditor>
 	)
 }
 
@@ -44,12 +43,7 @@ export default AddSheet;
 
 let AddSheetElementGroup = ({group}) => {
 	let {name, items} = group;
-	return (
-		<div className='AddSheetElementGroup'>
-			<label>{name}</label>
-			<div className='items'>{items.map((item, i) => <AddSheetItem key={i} item={item} /> )}</div>
-		</div>
-	);
+	return <PropertyEditorGroup title={name}>{items.map((item, i) => <AddSheetItem key={i} item={item} /> )}</PropertyEditorGroup>;
 }
 
 let AddSheetItem = ({item}) => {
