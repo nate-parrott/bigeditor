@@ -20,10 +20,6 @@ How to use Dragon Drop:
 
 - support dragging external files onto <Droppable /> targets.
 
-- support touch
-
-- if the cursor is near the edges of a scrollView, scroll it
-
 */
 
 export class DDTest extends Component {
@@ -105,7 +101,7 @@ class GlobalScrollCanceller {
 }
 let globalScrollCanceller = new GlobalScrollCanceller();
 
-class Draggable extends Component {
+export class Draggable extends Component {
 	// props: {children, dropData, onDraggedAway}
 	// LIFECYCLE:
 	constructor(props) {
@@ -343,7 +339,7 @@ let findDropTarget = (pos) => {
 	return results.length ? results[0].target : null;
 }
 
-class Droppable extends Component {
+export class Droppable extends Component {
 	// props: onDrop(dropData) -> true or false, depending on whether the drop is accepted or rejected
 	constructor(props) {
 		super(props);

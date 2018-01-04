@@ -6,6 +6,7 @@ import { Panel } from './Panels';
 import Element from './elements/Element';
 import { kvPair } from './utils';
 import AddSheet from './elements/AddSheet';
+import { insertDroppablesBetweenItems } from './DragonDrop';
 import './css/ContentView.css';
 
 let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRoot }) => {
@@ -15,7 +16,7 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRo
 		let elementsById = contentModel.view.elements || {};
 		let rootElementIds = contentModel.view.rootElements || [];
 		
-		let elementList = <ul className='elements'>{rootElementIds.map((elementId) => {
+		let elements = rootElementIds.map((elementId) => {
 			let elementView = elementsById[elementId];
 			let dataName = elementView.dataName;
 			let data = contentModel.data[dataName];
@@ -33,7 +34,17 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRo
 			};
 			
 			return <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
-		})}</ul>;
+		});
+		elements = insertDroppablesBetweenItems(elements, (index, dropData) => {
+			if (dropData.type === 'new') {
+				let {view, data, nameBase} = dropData;
+				contentModel.addElement(view, data, nameBase, index);
+				return true;
+			}
+			return false;
+		});
+		
+		let elementList = <ul className='elements'>{elements}</ul>;
 		
 		let classNames = ['ContentView'];
 		if (isPageRoot) classNames.push('isPageRoot');

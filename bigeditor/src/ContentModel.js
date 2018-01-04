@@ -35,7 +35,7 @@ export default class ContentModel {
 		this.view = view || {};
 		this.data = data || {};
 	}
-	appendElement(viewJson, dataJson, nameBase) {
+	addElement(viewJson, dataJson, nameBase, index) {
 		let dataName = this.getUniqueDataName(nameBase);
 		let elementId = uuidv4();
 		
@@ -50,12 +50,17 @@ export default class ContentModel {
 		this.updateView((oldView) => {
 			let elementUpdate = {};
 			elementUpdate[elementId] = viewJson;
+			let elementList = [...(oldView.rootElements || [])];
+			elementList.splice(index, 0, elementId);
 			return {
 				...oldView,
-				rootElements: [...(oldView.rootElements || []), elementId],
+				rootElements: elementList,
 				elements: {...oldView.elements, ...elementUpdate}
 			}
 		});
+	}
+	appendElement(viewJson, dataJson, nameBase) {
+		this.addElement(viewJson, dataJson, nameBase, (this.view.rootElements || []).length);
 	}
 	getUniqueDataName(name) {
 		let allNames = {};

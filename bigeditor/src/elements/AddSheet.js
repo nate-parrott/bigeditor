@@ -1,5 +1,6 @@
 import React from 'react';
 import './css/AddSheet.css';
+import { Draggable } from '../DragonDrop';
 
 let elementGroups = [
 	{
@@ -51,10 +52,13 @@ let AddSheetElementGroup = ({group}) => {
 }
 
 let AddSheetItem = ({item}) => {
+	let dropData = {type: 'new', view: item.view, data: item.data, nameBase: item.label};
 	return (
-		<div className='AddSheetItem'>
-			<span className={`fa fa-${item.icon}`} aria-hidden />
-			<label>{item.label}</label>
-		</div>
+		<Draggable dropData={dropData} onDraggedAway={() => {}}>
+			<div className='AddSheetItem'>
+				<span className={`fa fa-${item.icon}`} aria-hidden />
+				<label>{item.label}</label>
+			</div>
+		</Draggable>
 	)
 }
