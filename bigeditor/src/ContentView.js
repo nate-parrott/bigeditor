@@ -6,52 +6,18 @@ import { Panel } from './Panels';
 import Element from './elements/Element';
 import { kvPair } from './utils';
 import AddSheet from './elements/AddSheet';
-import { insertDroppablesBetweenItems } from './DragonDrop';
+import { insertDroppablesBetweenItems, Draggable } from './DragonDrop';
 import './css/ContentView.css';
 
 let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRoot }) => {
 	return <FirebaseLoader dbRefs={{view: viewRef, data: dataRef}} render={({view, data}) => {
-		
-		let contentModel = new ContentModel(viewRef, dataRef, view, data);
-		let elementsById = contentModel.view.elements || {};
-		let rootElementIds = contentModel.view.rootElements || [];
-		
-		let elements = rootElementIds.map((elementId) => {
-			let elementView = elementsById[elementId];
-			let dataName = elementView.dataName;
-			let data = contentModel.data[dataName];
-			
-			let onChangeData = (newVal) => {
-				contentModel.updateData((oldData) => {
-					return {...oldData, ...kvPair(dataName, newVal)};
-				});
-			};
-			let onChangeView = (newView) => {
-				contentModel.updateView((oldView) => {
-					let elementsById = oldView.elements || {};
-					return {...oldView, elements: {...elementsById, ...kvPair(elementId, newView)}};
-				})
-			};
-			
-			return <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
-		});
-		elements = insertDroppablesBetweenItems(elements, (index, dropData) => {
-			if (dropData.type === 'new') {
-				let {view, data, nameBase} = dropData;
-				contentModel.addElement(view, data, nameBase, index);
-				return true;
-			}
-			return false;
-		});
-		
-		let elementList = <ul className='elements'>{elements}</ul>;
-		
+		if (view === undefined || data === undefined) return null;
+		let contentModel = new ContentModel(viewRef, dataRef, view.exists ? view.data() : null, data.exists ? data.data() : null);
 		let classNames = ['ContentView'];
 		if (isPageRoot) classNames.push('isPageRoot');
-		
 		return (
 			<div className={classNames.join(' ')}>
-				{ elementList }
+				<ElementList contentModel={contentModel} elementListName='root' canEdit={canEdit} canConfigure={canConfigure} />
 				{ (isPageRoot && canConfigure) ? <ConfigChrome contentModel={contentModel} panelMgr={panelMgr} /> : null }
 			</div>
 		)
@@ -59,6 +25,55 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, panelMgr, isPageRo
 }
 
 export default ContentView;
+
+let ElementList = ({ contentModel, elementListName, canEdit, canConfigure }) => {
+	let elementsById = contentModel.view.elements;
+	let rootElementIds = contentModel.view.elementLists.root;
+	
+	let elements = rootElementIds.map((elementId) => {
+		let elementView = elementsById[elementId];
+		let dataName = elementView.dataName;
+		let data = contentModel.data[dataName];
+		
+		let onChangeData = (newVal) => {
+			contentModel.updateData((oldData) => {
+				return {...oldData, ...kvPair(dataName, newVal)};
+			});
+		};
+		let onChangeView = (newView) => {
+			contentModel.updateView((oldView) => {
+				let elementsById = oldView.elements || {};
+				return {...oldView, elements: {...elementsById, ...kvPair(elementId, newView)}};
+			})
+		};
+		
+		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
+		if (canConfigure && false) {
+			// let dropData = {type: 'move', elementId: elementId, view: elementView, data: data};
+			// let draggedAway = () => {
+			// 	contentModel.removeRootElement(elementId);
+			// };
+			// return <Draggable dropData={dropData} onDraggedAway={draggedAway}>{el}</Draggable>;
+		} else {
+			return el;
+		}
+	});
+	
+	if (canConfigure) { // add drop targets:
+		elements = insertDroppablesBetweenItems(elements, (index, dropData) => {
+			if (dropData.type === 'new') {
+				let {view, data, nameBase} = dropData;
+				contentModel.addElement(view, data, nameBase, 'root', index);
+				return true;
+			} else if (dropData.type === 'move') {
+				
+			}
+			return false;
+		});
+	}
+	
+	return <ul className='ElementList'>{elements}</ul>;
+}
 
 let ConfigChrome = ({ panelMgr, contentModel }) => {
 	let add = () => {

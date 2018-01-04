@@ -27,15 +27,16 @@ DATA JSON STRUCTURE:
 */
 
 import uuidv4 from 'uuid/v4';
+import { kvPair } from './utils';
 
 export default class ContentModel {
 	constructor(viewRef, dataRef, view, data) {
 		this.viewRef = viewRef;
 		this.dataRef = dataRef;
-		this.view = view || {};
+		this.view = view || { elements: {}, elementLists: {root: []} };
 		this.data = data || {};
 	}
-	addElement(viewJson, dataJson, nameBase, index) {
+	addElement(viewJson, dataJson, nameBase, elementListName, index) {
 		let dataName = this.getUniqueDataName(nameBase);
 		let elementId = uuidv4();
 		
@@ -48,19 +49,17 @@ export default class ContentModel {
 		});
 		
 		this.updateView((oldView) => {
-			let elementUpdate = {};
-			elementUpdate[elementId] = viewJson;
-			let elementList = [...(oldView.rootElements || [])];
+			let elementList = (oldView.elementLists[elementListName] || []).slice();
 			elementList.splice(index, 0, elementId);
 			return {
 				...oldView,
-				rootElements: elementList,
-				elements: {...oldView.elements, ...elementUpdate}
+				elements: {...oldView.elements, ...kvPair(elementId, viewJson)},
+				elementLists: {...oldView.elementLists, ...kvPair(elementListName, elementList)}
 			}
 		});
 	}
 	appendElement(viewJson, dataJson, nameBase) {
-		this.addElement(viewJson, dataJson, nameBase, (this.view.rootElements || []).length);
+		this.addElement(viewJson, dataJson, nameBase, 'root', this.view.elementLists.root.length);
 	}
 	getUniqueDataName(name) {
 		let allNames = {};
@@ -81,5 +80,10 @@ export default class ContentModel {
 	updateView(fn) {
 		this.view = fn(this.view);
 		this.viewRef.set(this.view);
+	}
+	removeRootElement(elementId) {
+		this.updateView((oldView) => {
+			return {...oldView, rootElements: (oldView.rootElements || []).filter((id) => id !== elementId)};
+		});
 	}
 }

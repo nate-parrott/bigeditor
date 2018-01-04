@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { kvPair } from './utils';
 
 export default class FirebaseLoader extends Component {
 	constructor(props) {
@@ -10,9 +11,7 @@ export default class FirebaseLoader extends Component {
 		this.unsubs = [];
 		for (let key in this.props.dbRefs) {
 			let unsub = this.props.dbRefs[key].onSnapshot((result) => {
-				let stateUpdate = {};
-				stateUpdate[key] = result.exists ? result.data() : {};
-				this.setState(stateUpdate);
+				this.setState(kvPair(key, result));
 			});
 			this.unsubs.push(unsub);
 		}
