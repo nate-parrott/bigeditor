@@ -1,6 +1,8 @@
 .ContentView {
-	line-height: 1.2;
-	font-size: x-large;
+	line-height: 1.5;
+}
+h1 {
+	font-size: 1.66em;
 }
 .ContentView.isPageRoot {
 	
