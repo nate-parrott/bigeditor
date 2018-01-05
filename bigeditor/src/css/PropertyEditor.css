@@ -6,7 +6,13 @@
 .PropertyEditor > div {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+/*	justify-content: center;
+*/}
+.PropertyEditor > div:before, .PropertyEditor > div:after {
+	content: " ";
+	width: 10px;
+	flex-grow: 1;
+	flex-shrink: 0;
 }
 .PropertyEditorGroup {
 	text-align: left;

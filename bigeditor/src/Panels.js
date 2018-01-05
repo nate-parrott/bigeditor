@@ -66,7 +66,7 @@ let PanelPortal = ({ children }) => {
 export let ModalPanel = ({ children, position, padding, dimsUI, onDismiss }) => {
 	dimsUI = (dimsUI !== false);
 	position = position || 'bottom';
-	padding = padding || true;
+	padding = padding !== false;
 	
 	let content = [];
 	if (onDismiss || dimsUI) {
