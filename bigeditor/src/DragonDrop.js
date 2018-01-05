@@ -138,7 +138,9 @@ export class Draggable extends Component {
 	}
 	// EVENT HANDLERS:
 	mousedown(e) {
-		this.pointerdown({x: e.clientX, y: e.clientY}, 200);
+		if (e.button === 0) {
+			this.pointerdown(e, {x: e.clientX, y: e.clientY}, 200);
+		}
 	}
 	mousemove(e) {
 		let pos = {x: e.clientX, y: e.clientY};
@@ -148,7 +150,7 @@ export class Draggable extends Component {
 		this.pointerup(e);
 	}
 	touchstart(e) {
-		this.pointerdown({x: e.touches[0].clientX, y: e.touches[0].clientY}, 500);
+		this.pointerdown(e, {x: e.touches[0].clientX, y: e.touches[0].clientY}, 500);
 	}
 	touchmove(e) {
 		let pos = {x: e.touches[0].clientX, y: e.touches[0].clientY};
@@ -157,12 +159,13 @@ export class Draggable extends Component {
 	touchend(e) {
 		this.pointerup(e);
 	}
-	pointerdown(pos, dragDelayMs) {
+	pointerdown(e, pos, dragDelayMs) {
 		this.clearDrag();
 		this.enableGlobalTracking(true);
 		this.startDragAfterDelay(200);
 		this.initialPos = pos;
 		this.updatePos(pos);
+		e.stopPropagation();
 	}
 	pointermove(pos, e) {
 		if (distance(pos, this.initialPos) > 5) {
@@ -308,17 +311,18 @@ export class Draggable extends Component {
 	}
 }
 
-export let insertDroppablesBetweenItems = (items, callback) => {
+export let insertDroppablesBetweenItems = (items, callback, droppableShape) => {
 	// callback: (idx, dropData) -> accept/reject drop
 	// if `true` is returned, the `Draggable`'s `onDraggedAway` method will be invoked.
 	// if `callback` already handles removal of the old item, return false.
+	droppableShape = droppableShape || 'horizontal';
 	let makeCallback = (idx) => { return (dropData) => callback(idx, dropData); };
-	let newItems = [<Droppable onDrop={makeCallback(0)} key={`drop-target-0}`} />];
+	let newItems = [<Droppable onDrop={makeCallback(0)} key={`drop-target-0}`} shape={droppableShape} />];
 	let i = 0;
 	for (let item of items) {
 		newItems.push(item);
 		i += 1;
-		newItems.push(<Droppable onDrop={makeCallback(i)} key={`drop-target-${i}`} />);
+		newItems.push(<Droppable onDrop={makeCallback(i)} key={`drop-target-${i}`} shape={droppableShape} />);
 	}
 	return newItems;
 }
@@ -378,9 +382,10 @@ export class Droppable extends Component {
 	}
 	lineSegment() {
 		// for shape = horizontal | vertical
+		let shape = this.props.shape || 'horizontal';
 		if (this.node) {
 			let bounds = this.node.getBoundingClientRect();
-			if (this.props.vertical) {
+			if (shape === 'vertical') {
 				return [{x: bounds.x, y: bounds.y}, {x: bounds.x, y: bounds.y + bounds.height}];
 			} else {
 				return [{x: bounds.x, y: bounds.y}, {x: bounds.x + bounds.width, y: bounds.y}]; 

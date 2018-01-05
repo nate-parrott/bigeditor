@@ -4,8 +4,8 @@ import './css/Element.css';
 
 export default class Element extends Component {
 	render() {
-		let { editable, configurable, data, view, onChangeData, onChangeView } = this.props;
+		let { editable, configurable, data, view, onChangeData, onChangeView, contentModel, id } = this.props;
 		let Component = elementForKey(view.type);
-		return <Component view={view} data={data} editable={editable} configurable={configurable} onChangeData={onChangeData} onChangeView={onChangeView} />;
+		return <Component view={view} data={data} editable={editable} configurable={configurable} onChangeData={onChangeData} onChangeView={onChangeView} contentModel={contentModel} id={id} />;
 	}
 }

@@ -16,7 +16,7 @@ let elementGroups = [
 		name: 'Interactivity',
 		items: [
 			{view: {type: 'placeholder'}, data: {}, label: 'Navbar', icon: 'bars'},
-			{view: {type: 'placeholder'}, data: {}, label: 'Button', icon: 'square-o'},			
+			{view: {type: 'button'}, data: {}, label: 'Button', icon: 'square-o'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Form', icon: 'check-square-o'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Comments', icon: 'commenting-o'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Like', icon: 'thumbs-up'}
@@ -26,7 +26,7 @@ let elementGroups = [
 		name: 'Groupings',
 		items: [
 			{view: {type: 'placeholder'}, data: {}, label: 'Grid', icon: 'th-large'},
-			{view: {type: 'placeholder'}, data: {}, label: 'HScroll', icon: 'ellipsis-h'},
+			{view: {type: 'hscroll'}, data: {}, label: 'HScroll', icon: 'ellipsis-h'},
 			{view: {type: 'placeholder'}, data: {}, label: 'PhotoBG', icon: 'picture-o'}
 		]
 	}

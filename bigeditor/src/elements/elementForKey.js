@@ -1,6 +1,8 @@
 import React from 'react';
 import TextElement from './TextElement';
 import ImageElement from './ImageElement';
+import ButtonElement from './ButtonElement';
+import HScrollElement from './HScrollElement';
 import './css/PlaceholderElement.css';
 
 let PlaceholderElement = ({editable, configurable}) => {
@@ -11,7 +13,9 @@ let PlaceholderElement = ({editable, configurable}) => {
 export default function elementForKey(key) {
 	let elements = {
 		text: TextElement,
-		image: ImageElement
+		image: ImageElement,
+		button: ButtonElement,
+		hscroll: HScrollElement
 	};
 	return elements[key] || PlaceholderElement;
 }

@@ -94,7 +94,7 @@ export default class ContentModel {
 		this.updateElementList(elementListName, (elementList) => {
 			elementList = elementList.slice();
 			elementList.splice(index, 0, elementId);
-			return elementId;
+			return elementList;
 		});
 	}
 	removeElementIdFromList(elementId, elementListName) {
@@ -104,7 +104,7 @@ export default class ContentModel {
 	}
 	updateElementList(elementListName, func) {
 		this.updateView((oldView) => {
-			let elementList = func(oldView.elementLists[elementListName]);
+			let elementList = func(oldView.elementLists[elementListName] || []);
 			return {...oldView, elementLists: {...oldView.elementLists, ...kvPair(elementListName, elementList)}};
 		});
 	}

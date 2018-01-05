@@ -3,7 +3,6 @@ import { PropertyEditor, PropertyEditorGroup, PropertyEditorItemMargin, UploadIm
 import { Checkbox } from '../UI';
 import { ModalPanel } from '../Panels';
 import './css/ImageElement.css';
-console.log(React.version);
 
 export class ImageElement extends Component {
 	constructor(props) {

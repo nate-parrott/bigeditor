@@ -26,7 +26,7 @@ let ContentView = ({ dataRef, viewRef, canEdit, canConfigure, isPageRoot }) => {
 
 export default ContentView;
 
-let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panelMgr }) => {
+export let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, horizontal }) => {
 	let elementsById = contentModel.view.elements;
 	let elementIds = contentModel.view.elementLists[elementListName] || [];
 	
@@ -44,7 +44,7 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panel
 			contentModel.updateElementView(elementId, newView);
 		};
 		
-		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} />;
+		let el = <Element key={elementId} editable={canEdit} configurable={canConfigure} view={elementView} data={data} onChangeView={onChangeView} onChangeData={onChangeData} id={elementId} contentModel={contentModel} />;
 		if (canConfigure) {
 			let dropData = {type: 'move', elementId: elementId, view: elementView, data: data};
 			let draggedAway = () => {
@@ -60,7 +60,7 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panel
 		elements = insertDroppablesBetweenItems(elements, (index, dropData) => {
 			if (dropData.type === 'new') {
 				let {view, data, nameBase} = dropData;
-				contentModel.addElement(view, data, nameBase, 'root', index);
+				contentModel.addElement(view, data, nameBase, elementListName, index);
 				return true;
 			} else if (dropData.type === 'move') {
 				let {elementId, view, data} = dropData;
@@ -80,7 +80,7 @@ let ElementList = ({ contentModel, elementListName, canEdit, canConfigure, panel
 				}
 			}
 			return false;
-		});
+		}, horizontal ? 'vertical' : 'horizontal');
 	}
 	
 	return <ul className='ElementList'>{elements}</ul>;

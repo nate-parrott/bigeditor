@@ -1,0 +1,15 @@
+.HScrollElement {
+	background-color: red;
+}
+.HScrollElement > .ElementList {
+	display: flex;
+	flex-direction: row;
+	min-height: 3em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.HScrollElement > .ElementList > .Droppable {
+	align-self: stretch;
+	margin-top: -1em;
+	margin-bottom: -1em;
+}
