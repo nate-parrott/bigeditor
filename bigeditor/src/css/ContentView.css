@@ -5,7 +5,7 @@ h1 {
 	font-size: 1.66em;
 }
 .ContentView.isPageRoot {
-	
+	padding-bottom: 150px;
 }
 .ContentView > .ElementList {
 	padding: 0;
@@ -18,4 +18,10 @@ h1 {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
+}
+.ConfigChrome .trash {
+	display: none;
+}
+.dd-drag-active .ConfigChrome .trash {
+	display: block;
 }

@@ -124,7 +124,8 @@ export class Draggable extends Component {
 	}
 	render() {
 		let style = {opacity: this.state.dragging ? 0.5 : 1};
-		return <div className='Draggable' style={style} ref={(el) => this.gotElement(el)}>{this.props.children}</div>;
+		let classNames = ['Draggable', ...(this.props.className || '').split(' ')];
+		return <div className={classNames.join(' ')} style={style} ref={(el) => this.gotElement(el)}>{this.props.children}</div>;
 	}
 	gotElement(el) {
 		if (!el) return;
@@ -348,7 +349,7 @@ export class Droppable extends Component {
 	}
 	render() {
 		let shape = this.props.shape || 'horizontal';
-		let className = `Droppable ${shape} ${this.state.active ? 'active' : ''}`;
+		let className = `Droppable ${shape} ${this.state.active ? 'active' : ''}` + ' ' + (this.props.className || '');
 		return <div className={className} onDrop={this.props.onDrop} ref={(n) => this.node = n}>{this.props.children}</div>;
 	}
 	componentDidMount() {

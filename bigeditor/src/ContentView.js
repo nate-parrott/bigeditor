@@ -92,7 +92,7 @@ class ConfigChrome extends Component {
 		this.state = {showAdd: false};
 	}
 	render() {
-		let trash = <Droppable shape='box' onDrop={() => true}><FloatingButton><i className='fa fa-trash' /></FloatingButton></Droppable>;
+		let trash = <Droppable className='trash' shape='box' onDrop={() => true}><FloatingButton><i className='fa fa-trash' /></FloatingButton></Droppable>;
 		let add = <FloatingButton onClick={() => this.setState({showAdd: true})}><span>+</span></FloatingButton>;
 		return (
 			<div className='ConfigChrome'>
