@@ -9,9 +9,13 @@ export class HScrollElement extends Component {
 	}
 	render() {
 		let { editable, configurable, contentModel, id } = this.props;
+		let classNames = ['HScrollElement'];
+		if ((contentModel.view.elementLists[id] || []).length === 0) {
+			classNames.push('empty');
+		}
 		// contentModel, elementListName, canEdit, canConfigure
 		return (
-			<div className='HScrollElement'>
+			<div className={classNames.join(' ')}>
 				<ElementList contentModel={contentModel} elementListName={id} canEdit={editable} canConfigure={configurable} horizontal={true} />
 			</div>
 		)

@@ -16,7 +16,7 @@ export class ImageElement extends Component {
 		let style = {
 			paddingBottom: 100 / data.aspectRatio + '%'
 		};
-		let className = `ImageElement mode-${view.mode}`;
+		let className = `ImageElement mode-${view.mode} greedy-width`;
 		let img = null;
 		if (data.url) {
 			img = <img src={data.url} alt="" />;
