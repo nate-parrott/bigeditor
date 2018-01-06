@@ -48,7 +48,7 @@ let AddSheetElementGroup = ({ group, onAdd }) => {
 }
 
 let AddSheetItem = ({ item, onAdd }) => {
-	let dropData = {view: item.view, data: item.data, nameBase: item.label};
+	let dropData = {type: 'new', view: item.view, data: item.data, nameBase: item.label};
 	return (
 		<Draggable dropData={dropData} onDraggedAway={() => {}}>
 			<div className='AddSheetItem' onClick={() => onAdd(dropData)}>

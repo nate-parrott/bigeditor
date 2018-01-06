@@ -353,7 +353,7 @@ export class Droppable extends Component {
 	}
 	render() {
 		let shape = this.props.shape || 'horizontal';
-		let className = `Droppable ${shape} ${this.state.active ? 'active' : ''}` + ' ' + (this.props.className || '');
+		let className = `Droppable ${shape} ${this.state.active ? 'active' : ''} ` + (this.props.className || '');
 		return <div className={className} onDrop={this.props.onDrop} ref={(n) => this.node = n}>{this.props.children}</div>;
 	}
 	componentDidMount() {

@@ -42,21 +42,21 @@ let _setJsonPath = (item, path, val, i) => {
 	}
 }
 
-let assert = (cond) => {
+export let assert = (cond) => {
 	if (!cond) {
-		throw "Assertion failed";
+		throw new Error("Assertion failed");
 	}
 }
 
-let testUtils = () => {
-	assert(getJsonPath(123, []) === 123);
-	assert(getJsonPath([1, {xyz: 3}], [1, 'xyz']) === 3);
-	assert(setJsonPath(123, [], 'one') === 'one');
-	assert(setJsonPath({x: {y: [1, 2]}}, ['x', 'y', 1], 'one').x.y[1] === 'one');
-	assert(setJsonPath({x: [{y: 1, v: 9}]}, ['x', 0, 'y'], -3).x[0].v === 9);
-	assert(setJsonPath(null, ['x', 0, 'y'], -9).x[0].y === -9);
-	assert(getJsonPath({x: 2}, ['y', 7, 'f']) === undefined);
-	console.log('test succeeded');
-}
+// let testUtils = () => {
+// 	assert(getJsonPath(123, []) === 123);
+// 	assert(getJsonPath([1, {xyz: 3}], [1, 'xyz']) === 3);
+// 	assert(setJsonPath(123, [], 'one') === 'one');
+// 	assert(setJsonPath({x: {y: [1, 2]}}, ['x', 'y', 1], 'one').x.y[1] === 'one');
+// 	assert(setJsonPath({x: [{y: 1, v: 9}]}, ['x', 0, 'y'], -3).x[0].v === 9);
+// 	assert(setJsonPath(null, ['x', 0, 'y'], -9).x[0].y === -9);
+// 	assert(getJsonPath({x: 2}, ['y', 7, 'f']) === undefined);
+// 	console.log('test succeeded');
+// }
 
 // testUtils();
