@@ -16,8 +16,10 @@ let elementGroups = [
 		name: 'Interactivity',
 		items: [
 			{view: {type: 'placeholder'}, data: {}, label: 'Navbar', icon: 'bars'},
-			{view: {type: 'button'}, data: {}, label: 'Button', icon: 'square-o'},			
+			{view: {type: 'button'}, data: {}, label: 'Button', icon: 'square-o'},	
+			{view: {type: 'placeholder'}, data: {}, label: 'Textbox', icon: 'keyboard-o'},
 			{view: {type: 'placeholder'}, data: {}, label: 'Form', icon: 'check-square-o'},			
+			{view: {type: 'placeholder'}, data: {}, label: 'Results', icon: 'list'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Comments', icon: 'commenting-o'},			
 			{view: {type: 'placeholder'}, data: {}, label: 'Like', icon: 'thumbs-up'}
 		]

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PropertyEditor, PropertyEditorGroup, PropertyEditorItemMargin, UploadImageButton } from '../PropertyEditor';
 import { Checkbox } from '../UI';
 import { ModalPanel } from '../Panels';
+import seed from 'seed-random';
 import './css/ImageElement.css';
 
 export class ImageElement extends Component {
@@ -10,12 +11,19 @@ export class ImageElement extends Component {
 		this.state = {editing: false};
 	}
 	render() {
-		let {editable, configurable, view, data, onChangeView, onChangeData } = this.props;
-		let style = {paddingBottom: 100 / data.aspectRatio + '%'};
+		let { editable, configurable, view, data, onChangeView, onChangeData, id } = this.props;
+		
+		let style = {
+			paddingBottom: 100 / data.aspectRatio + '%'
+		};
 		let className = `ImageElement mode-${view.mode}`;
 		let img = null;
 		if (data.url) {
 			img = <img src={data.url} alt="" />;
+		} else {
+			let rand = seed(id);
+			let hue = (rand() * 360) | 0;
+			style.backgroundImage = `linear-gradient(135deg, hsl(${hue}, 80%, 80%), hsl(${hue}, 100%, 50%))`;
 		}
 		
 		let edit = () => {
