@@ -19,7 +19,13 @@ export let getJsonPath = (item, path) => {
 }
 
 let _getJsonPath = (item, path, i) => {
-	return i === path.length ? item : _getJsonPath(item[path[i]], path, i + 1);
+	if (i === path.length) {
+		return item;
+	} else if (item) {
+		return _getJsonPath(item[path[i]], path, i + 1);
+	} else {
+		return undefined;
+	}
 }
 
 export let setJsonPath = (item, path, val) => {
@@ -48,6 +54,8 @@ let testUtils = () => {
 	assert(setJsonPath(123, [], 'one') === 'one');
 	assert(setJsonPath({x: {y: [1, 2]}}, ['x', 'y', 1], 'one').x.y[1] === 'one');
 	assert(setJsonPath({x: [{y: 1, v: 9}]}, ['x', 0, 'y'], -3).x[0].v === 9);
+	assert(setJsonPath(null, ['x', 0, 'y'], -9).x[0].y === -9);
+	assert(getJsonPath({x: 2}, ['y', 7, 'f']) === undefined);
 	console.log('test succeeded');
 }
 

@@ -35,23 +35,23 @@ let elementGroups = [
 let AddSheet = ({ onAdd }) => {
 	return (
 		<PropertyEditor>
-			{elementGroups.map((group, i) => <AddSheetElementGroup key={i} group={group} />)}
+			{elementGroups.map((group, i) => <AddSheetElementGroup onAdd={onAdd} key={i} group={group} />)}
 		</PropertyEditor>
 	)
 }
 
 export default AddSheet;
 
-let AddSheetElementGroup = ({group}) => {
+let AddSheetElementGroup = ({ group, onAdd }) => {
 	let {name, items} = group;
-	return <PropertyEditorGroup title={name}>{items.map((item, i) => <AddSheetItem key={i} item={item} /> )}</PropertyEditorGroup>;
+	return <PropertyEditorGroup title={name}>{items.map((item, i) => <AddSheetItem key={i} item={item} onAdd={onAdd} /> )}</PropertyEditorGroup>;
 }
 
-let AddSheetItem = ({item}) => {
-	let dropData = {type: 'new', view: item.view, data: item.data, nameBase: item.label};
+let AddSheetItem = ({ item, onAdd }) => {
+	let dropData = {view: item.view, data: item.data, nameBase: item.label};
 	return (
 		<Draggable dropData={dropData} onDraggedAway={() => {}}>
-			<div className='AddSheetItem'>
+			<div className='AddSheetItem' onClick={() => onAdd(dropData)}>
 				<span className={`fa fa-${item.icon}`} aria-hidden />
 				<label>{item.label}</label>
 			</div>

@@ -94,11 +94,14 @@ class ConfigChrome extends Component {
 	render() {
 		let trash = <Droppable className='trash' shape='box' onDrop={() => true}><FloatingButton><i className='fa fa-trash' /></FloatingButton></Droppable>;
 		let add = <FloatingButton onClick={() => this.setState({showAdd: true})}><span>+</span></FloatingButton>;
+		let onAdd = ({ view, data, nameBase }) => {
+			this.props.contentModel.appendElement(view, data, nameBase);
+		}
 		return (
 			<div className='ConfigChrome'>
 				{trash}
 				{add}
-				{this.state.showAdd ? <ModalPanel padding={false} onDismiss={() => this.setState({showAdd: false})}><AddSheet /></ModalPanel> : null}
+				{this.state.showAdd ? <ModalPanel padding={false} onDismiss={() => this.setState({showAdd: false})}><AddSheet onAdd={onAdd} /></ModalPanel> : null}
 			</div>
 		);
 	}
