@@ -1,7 +1,7 @@
 
 export let getSubdomain = () => {
 	let hostParts = window.location.host.split('.');
-	if (hostParts.length === 1 || hostParts[0] === 'www' || hostParts[0] === '192') {
+	if (hostParts.length === 1 || hostParts[0] === 'www' || hostParts[0] === '192' || hostParts[0] === '172') {
 		return null;
 	} else {
 		return hostParts[0];

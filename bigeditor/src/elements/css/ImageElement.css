@@ -1,8 +1,4 @@
-.ImageElement.mode-normal {
-	max-width: 800px;
-	margin: auto;
-}
-.ImageElement.mode-full-bleed {
+.ImageElement {
 	width: 100%;
 }
 .ImageElement > .imageWrapper {

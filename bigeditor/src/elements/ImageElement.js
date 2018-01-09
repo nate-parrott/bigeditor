@@ -59,14 +59,14 @@ let ImageElementPropertyEditor = ({ data, view, onChangeData, onChangeView, conf
 		</PropertyEditorGroup>
 	];
 	if (configurable) {
-		let toggleFullBleed = () => {
-			onChangeView({...view, mode: (view.mode === 'normal') ? 'full-bleed' : 'normal'});
-		}
-		groups.push(<PropertyEditorGroup title="Appearance" key="appearance">
-			<PropertyEditorItemMargin>
-				<Checkbox value={view.mode === 'full-bleed'} onToggle={toggleFullBleed}>Full-bleed</Checkbox>
-			</PropertyEditorItemMargin>
-		</PropertyEditorGroup>);
+		// let toggleFullBleed = () => {
+		// 	onChangeView({...view, mode: (view.mode === 'normal') ? 'full-bleed' : 'normal'});
+		// }
+		// groups.push(<PropertyEditorGroup title="Appearance" key="appearance">
+		// 	<PropertyEditorItemMargin>
+		// 		<Checkbox value={view.mode === 'full-bleed'} onToggle={toggleFullBleed}>Full-bleed</Checkbox>
+		// 	</PropertyEditorItemMargin>
+		// </PropertyEditorGroup>);
 	}
 	return <PropertyEditor>{groups}</PropertyEditor>;
 }

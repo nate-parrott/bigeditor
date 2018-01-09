@@ -1,6 +1,5 @@
 .TextElement {
-	max-width: 800px;
-	margin: auto;
+	margin: auto 1em;
 }
 .TextElement > .EditableText {
 	outline: none;

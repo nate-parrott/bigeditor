@@ -329,7 +329,7 @@ export let insertDroppablesBetweenItems = (items, callback, droppableShape) => {
 
 let dropTargets = [];
 let findDropTarget = (pos) => {
-	let MAX_DIST = 100;
+	let MAX_DIST = 10000;
 	let results = [];
 	for (let target of dropTargets) {
 		let dist = target.distance(pos);
